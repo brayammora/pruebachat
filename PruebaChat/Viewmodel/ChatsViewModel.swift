@@ -13,10 +13,12 @@ import SocketIO
 
 class ChatsViewModel: NSObject {
     
-    let socketManager = SocketIOManager()
+    var messagesList: [String]!
+    var usersList: [String]!
     
     override init() {
-        
+        self.messagesList = [String]()
+        self.usersList = [String]()
     }
     
 }

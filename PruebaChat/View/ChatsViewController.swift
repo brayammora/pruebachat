@@ -19,100 +19,44 @@ class ChatsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
 
+    /*
     let manager = SocketManager(socketURL: URL(string: "https://socket-server-rcflechas.herokuapp.com/")!, config: [.log(true), .compress])
     var socket: SocketIOClient!
+ */
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.ConnectToSocket()
+        
+        if(!SocketIOManager.sharedInstance.checkConnection()) {
+            SocketIOManager.sharedInstance.connectSocket()
+        }
         self.messagesList = [Chats]()
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
+        self.showUserList()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleConnectedUserUpdateNotification(_:)), name: NSNotification.Name(rawValue: "userWasConnectedNotification"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUserLeftUpdateNotification(_:)), name: NSNotification.Name(rawValue: "userWasDesonnectedNotification"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMessageNotification(_:)), name: NSNotification.Name(rawValue: "newMessageNotification"), object: nil)
     }
     
-    func ConnectToSocket() {
-        
-        self.socket = self.manager.defaultSocket
-        
-        self.socket.on(clientEvent: .connect) {data, ack in
-            //self.present(Utilities.setAlert(msg: "Socket Connected"), animated: true, completion: nil)
-            self.socket.emit("add user", self.username)
-        }
-        
-        self.socket.on(clientEvent: .error) { (data, eck) in
-            //self.present(Utilities.setAlert(msg: "Socket Error"), animated: true, completion: nil)
-        }
-        
-        self.socket.on(clientEvent: .disconnect) { (data, eck) in
-            self.present(Utilities.setAlert(msg: "Socket Disconnect"), animated: true, completion: nil)
-        }
-        
-        self.socket.on(clientEvent: SocketClientEvent.reconnect) { (data, eck) in
-            //self.present(Utilities.setAlert(msg: "Socket Reconnect"), animated: true, completion: nil)
-        }
-        
-        self.socket.on("user list") { response, ack in
-            //self.present(Utilities.setAlert(msg: "user list"), animated: true, completion: nil)
+    func showUserList() {
+        if(SocketIOManager.sharedInstance.checkConnection()) {
             
-            let userList =  response as! [[String: AnyObject]]
-            let users = self.getValuesFromList(list: userList[0])
-            self.messagesList = self.removeMe(users: users)
-            self.tableView.reloadData()
-            self.tableView.isHidden = false
+            SocketIOManager.sharedInstance.addMeToUserList(self.username, completionHandler: { (userList) -> Void in
+                
+                let userList =  userList
+                let users = self.getValuesFromList(list: userList[0])
+                self.messagesList = self.removeMe(users: users)
+                self.tableView.reloadData()
+                self.tableView.isHidden = false
+            })
         }
-        
-        self.socket.on("user joined") { response, ack in
-            //self.present(Utilities.setAlert(msg: "user joined"), animated: true, completion: nil)
-            
-            let userList =  response as! [[String: AnyObject]]
-            var user: Chats = Chats()
-            for (key, value) in userList[0] {
-                switch key {
-                    case "id":
-                        user.idChat = value.description
-                    case "username":
-                        user.nameChat = value.description
-                    default:
-                        print("")
-                }
-            }
-            self.messagesList.append(user)
-            self.tableView.reloadData()
-            self.tableView.isHidden = false
-        }
-        
-        self.socket.on("user left") { response, ack in
-            //self.present(Utilities.setAlert(msg: "user joined"), animated: true, completion: nil)
-            
-            let userList =  response as! [[String: AnyObject]]
-            var userToRemove = String()
-            
-            for (key, value) in userList[0] {
-                if(key == "username") {
-                    userToRemove = value.description
-                }
-            }
-            
-            guard let index = self.messagesList.firstIndex(where: { userToRemove == $0.nameChat }) else {return}
-            self.messagesList.remove(at: index)
-            self.tableView.reloadData()
-            self.tableView.isHidden = false
-        }
-        
-        self.socket.connect()
-    }
-    
-    func disconnect() {
-        
-        self.socket.off(clientEvent: .connect)
-        self.socket.off(clientEvent: .error)
-        self.socket.off(clientEvent: .disconnect)
-        self.socket.off(clientEvent: SocketClientEvent.reconnect)
-        self.socket.removeAllHandlers()
-        self.socket.emit("disconnect")
-        self.socket.disconnect()
     }
     
     func getValuesFromList(list: [String: AnyObject]) -> [Chats] {
@@ -142,14 +86,78 @@ class ChatsViewController: UIViewController {
         for user in users {
             if(user.nameChat != self.username) {
                 response.append(user)
+            }else {
+                self.id = user.idChat
             }
         }
         return response
     }
     
     func back(sender: UIBarButtonItem) {
-        self.disconnect()
+        SocketIOManager.sharedInstance.disconnectSocket()
         _ = navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func handleConnectedUserUpdateNotification(_ notification: Notification) {
+        let userList = notification.object as! [[String: AnyObject]]
+        var user: Chats = Chats()
+        for (key, value) in userList[0] {
+            switch key {
+                case "id":
+                    user.idChat = value.description
+                case "username":
+                    user.nameChat = value.description
+                default:
+                    print("")
+            }
+        }
+        self.messagesList.append(user)
+        self.tableView.reloadData()
+        self.tableView.isHidden = false
+    }
+    
+    @objc func handleUserLeftUpdateNotification(_ notification: Notification) {
+        let userList = notification.object as! [[String: AnyObject]]
+        var userToRemove = String()
+        
+        for (key, value) in userList[0] {
+            if(key == "username") {
+                userToRemove = value.description
+            }
+        }
+        
+        guard let index = self.messagesList.firstIndex(where: { userToRemove == $0.nameChat }) else {return}
+        self.messagesList.remove(at: index)
+        self.tableView.reloadData()
+        self.tableView.isHidden = false
+    }
+    
+    @objc func handleNewMessageNotification(_ notification: Notification) {
+        let userList = notification.object as! [[String: AnyObject]]
+        print("NUEVO MENSAJE --> \(userList) <-- NUEVO MENSAJE")
+        
+        /*
+        NUEVO MENSAJE --> [[
+            "rnd": f1ee37b7680711fe6b354064579b05ebf95cf2ad6b729bd66027223f8de22a245b7f7be90ace1fd617be6e6633bae1907e63f05398bb56387bb14ca99639a97e844f2e030b4a102aa18479816b611a5e707ddeb4f060ed0d0a93ba46a632853f1d55ab65e2d17245e6626c26439903c50228a4a10420a176bd9ab088fdc5f8e80476fd763d9fe5e996afc7ddcbd0d0b1,
+            "iv": 983e383d7c27258a1e8d46898ab99e5e,
+            "message": 83132b2e78a09b7a4f965b029f6f9d7d852bd8cf,
+            "irv": aad58a4ed5f724171e586eb9719f0683,
+            "to": sk8MkwO2gBHMDuS-AAAJ,
+            "from": ihd7zThX4y8HSusjAAAH
+        ]] <-- NUEVO MENSAJE
+ 
+         */
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if (segue.identifier == "fromChatsToMessages") {
+            let vc = segue.destination as! PrivateViewController
+            vc.me = self.id
+            let receiverInfo = sender as! [String]
+            vc.receiverId = receiverInfo[0]
+            vc.receiverName = receiverInfo[1]
+        }
     }
 }
 
@@ -180,9 +188,13 @@ extension ChatsViewController : UITableViewDelegate, UITableViewDataSource { //t
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     
-        self.performSegue(withIdentifier: "fromChatsToMessages", sender: self)
         
+        let currentCell = tableView.cellForRow(at: indexPath) as? ChatsTableViewCell
+        guard let index = self.messagesList.firstIndex(where: { currentCell?.userName.text == $0.nameChat }) else {return}
+        let idReceiver = self.messagesList[index].idChat
+        let nameReceiver = self.messagesList[index].nameChat
+        let receiverInfo = [idReceiver, nameReceiver]
+        self.performSegue(withIdentifier: "fromChatsToMessages", sender: receiverInfo)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

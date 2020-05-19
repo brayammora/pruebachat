@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        SocketIOManager.sharedInstance.connectSocket()
     }
     
     @IBAction func loginAction(_ sender: Any) {

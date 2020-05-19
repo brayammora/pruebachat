@@ -32,8 +32,11 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
     
-    var dataTest = ["i","image","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text","h","Lorem Ipsum is simply dummy"]
-    var test2 = 0
+    var messageList: [[String:String]]!
+    var me: String = String()
+    var receiverId: String = String()
+    var receiverName: String = String()
+    
     var cont = 0
     var y1 = 0.0
     var y2 = 0.0
@@ -45,6 +48,17 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        self.messageList = [[String:String]]()
+        
+        print("SOY YO --> \(self.me) <--- SOY YO")
+        print("RECEIVER--> \(self.receiverId) <--- RECEIVER")
+        
+        if(!SocketIOManager.sharedInstance.checkConnection()) {
+            SocketIOManager.sharedInstance.connectSocket()
+        }
+        
+        self.titleUser.text = self.receiverName.capitalized
+        self.statusUser.text = "Online"
         self.navigationController?.isNavigationBarHidden = true
         self.boxChatTextView.delegate = self
         self.chatView.delegate = self
@@ -52,63 +66,39 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
         self.chatView.estimatedRowHeight = 20
         self.chatView.rowHeight = UITableView.automaticDimension
         self.chatView.separatorColor = Colors.clear
-    }
-    
-    @IBAction func infoButtonAction(_ sender: Any) {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMessageNotification(_:)), name: NSNotification.Name(rawValue: "newMessageNotification"), object: nil)
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func addDocumentAction(_ sender: Any) {
-    }
-    
-    @IBAction func shareLinkAction(_ sender: Any) {
-    }
-    
-    @IBAction func multimediaAction(_ sender: Any) {
-    }
-    
-    @IBAction func addImageAction(_ sender: Any) {
-    }
-    
-    @IBAction func cameraAction(_ sender: Any) {
-    }
     
     @IBAction func sendMessageAction(_ sender: Any) {
-    }
-    
-    @IBAction func openChatAction(_ sender: Any) {
-        cont += 1
-        UIView.animate(withDuration: 0.3) {
-            if self.cont % 2 != 0{
-                self.textViewActive = true
-                self.boxChatTextView.frame = CGRect(x:  self.boxChatTextView.frame.origin.x, y: self.boxChatTextView.frame.origin.y, width: self.boxChatTextView.frame.width, height: 45)
-                self.openChatButton.frame = CGRect(x:  self.openChatButton.frame.origin.x, y: self.openChatButton.frame.origin.y, width: self.openChatButton.frame.width, height: self.openChatButton.frame.height)
-                self.openChatButton.transform =  CGAffineTransform(rotationAngle: .pi)
-                
-            }else{
-                self.textViewActive = false
-                self.openChatButton.frame = CGRect(x:  self.openChatButton.frame.origin.x, y: CGFloat(self.y2), width: self.openChatButton.frame.width, height: self.openChatButton.frame.height)
-                self.boxChatTextView.frame = CGRect(x:  self.boxChatTextView.frame.origin.x, y: self.bottomView.frame.origin.y - 1 , width: self.boxChatTextView.frame.width, height: 45)
-                self.openChatButton.transform =  CGAffineTransform(rotationAngle: 0 )
-            }
+        
+        guard let message = self.boxChatTextView.text else {return}
+        if(SocketIOManager.sharedInstance.checkConnection()) {
+            let data = self.prepareData(message: message)
+            SocketIOManager.sharedInstance.sendMessage(data, completionHandler: { () -> Void in
+                self.messageList.append([self.receiverId: message])
+                self.chatView.reloadData()
+                self.chatView.isHidden = false
+            })
         }
+        
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+    func prepareData(message: String) -> String {
+        return """
+        { "from": "\(self.me)", "to": "\(self.receiverId)", "message" : "\(message)", "rnd" : "rnd" , "iv" : "iv" , "irv" : "irv" }
+        """
     }
     
     override func viewDidAppear(_ animated: Bool) {
         self.y1 = Double(self.bottomView.frame.origin.y)
         self.y2 = Double(self.openChatButton.frame.origin.y)
         self.y3 = Double(self.boxChatTextView.frame.origin.y)
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -126,34 +116,38 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    @objc func keyboardWillShow(_ notification:Notification) {
-        self.boxChatTextView.text = nil
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            self.openChatButton.transform =  CGAffineTransform(rotationAngle: .pi)
-            
-            self.bottomView.frame = CGRect(x: self.bottomView.frame.origin.x, y:  keyboardHeight + 93, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-            self.boxChatTextView.frame = CGRect(x: self.boxChatTextView.frame.origin.x, y: keyboardHeight +  48, width:  self.boxChatTextView.frame.width, height:  self.boxChatTextView.frame.height)
-            self.openView.frame = CGRect(x: self.openView.frame.origin.x, y: keyboardHeight +  48, width:  self.openView.frame.width, height:  self.openView.frame.height)
-            self.openChatButton.frame = CGRect(x: self.openChatButton.frame.origin.x, y:  keyboardHeight + 57, width: self.openChatButton.frame.width, height: self.openChatButton.frame.height)
-        }
-    }
-    
-    @objc func keyboardWillHide(_ notification:Notification) {
-        if !self.textViewActive{
-            self.bottomView.frame = CGRect(x: self.bottomView.frame.origin.x, y:  CGFloat(y1)  , width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-            self.boxChatTextView.frame = CGRect(x: self.boxChatTextView.frame.origin.x, y: CGFloat(y3) , width:  self.boxChatTextView.frame.width, height:  45)
-            self.openView.frame = CGRect(x: self.openView.frame.origin.x, y: CGFloat(y3) , width:  self.openView.frame.width, height:  45)
-            self.openChatButton.frame = CGRect(x: self.openChatButton.frame.origin.x, y:  CGFloat(y2)  , width: self.openChatButton.frame.width, height: self.openChatButton.frame.height)
-        }else{
-            self.bottomView.frame = CGRect(x: self.bottomView.frame.origin.x, y:  CGFloat(y1)  , width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-            self.openChatButton.frame = CGRect(x: self.openChatButton.frame.origin.x, y:  CGFloat(y2)  , width: self.openChatButton.frame.width, height: self.openChatButton.frame.height)
-            self.boxChatTextView.frame = CGRect(x: self.boxChatTextView.frame.origin.x, y: CGFloat(y3), width:  self.boxChatTextView.frame.width, height:  self.boxChatTextView.frame.height)
-            self.openView.frame = CGRect(x: self.openView.frame.origin.x, y: CGFloat(y3), width:  self.openView.frame.width, height:  self.openView.frame.height)
-        }
-        self.openChatButton.transform =  CGAffineTransform(rotationAngle: 0 )
+    @objc func handleNewMessageNotification(_ notification: Notification) {
+        let userList = notification.object as! [[String: AnyObject]]
         
+        var to = String()
+        var message = String()
+        for (key, value) in userList[0] {
+            switch key {
+                case "to":
+                    to = value.description
+                case "message":
+                    message = value.description
+                default:
+                    print("")
+            }
+        }
+        self.messageList.append([to:message])
+        self.chatView.reloadData()
+        self.chatView.isHidden = false
+        
+        /*
+         print("NUEVO MENSAJE --> \(userList) <-- NUEVO MENSAJE")
+         
+         NUEVO MENSAJE --> [[
+         "rnd": f1ee37b7680711fe6b354064579b05ebf95cf2ad6b729bd66027223f8de22a245b7f7be90ace1fd617be6e6633bae1907e63f05398bb56387bb14ca99639a97e844f2e030b4a102aa18479816b611a5e707ddeb4f060ed0d0a93ba46a632853f1d55ab65e2d17245e6626c26439903c50228a4a10420a176bd9ab088fdc5f8e80476fd763d9fe5e996afc7ddcbd0d0b1,
+         "iv": 983e383d7c27258a1e8d46898ab99e5e,
+         "message": 83132b2e78a09b7a4f965b029f6f9d7d852bd8cf,
+         "irv": aad58a4ed5f724171e586eb9719f0683,
+         "to": sk8MkwO2gBHMDuS-AAAJ,
+         "from": ihd7zThX4y8HSusjAAAH
+         ]] <-- NUEVO MENSAJE
+         
+         */
     }
     
 }
@@ -165,25 +159,23 @@ extension PrivateViewController : UITableViewDelegate, UITableViewDataSource { /
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataTest.count
+        return messageList.count
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell") as? MessageTableViewCell
-        test2 += 1
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PrivateTableViewCell") as? PrivateTableViewCell
+        let row = self.messageList[indexPath.row]
+        let key = row.keys
         
-        if test2%2 == 0{
-            print("......1")
-            test = (cell?.setCustom(text: dataTest[indexPath.row], type: true))!
-        }else{
-            print("......2")
-            test = (cell?.setCustom(text: dataTest[indexPath.row],type: false))!
+        if(key.description != self.me) {
+            test = (cell?.setCustom(text: row.values.description , type: true))!
+        }else {
+            test = (cell?.setCustom(text: row.values.description,type: false))!
         }
         
         return cell!
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

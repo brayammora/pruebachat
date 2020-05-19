@@ -18,7 +18,7 @@
 		5504E13A246B075F00A828E2 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E139246B075F00A828E2 /* ChatsViewController.swift */; };
 		5504E13D246B0D5500A828E2 /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E13C246B0D5500A828E2 /* Chats.swift */; };
 		5504E13F246B0EBD00A828E2 /* ChatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E13E246B0EBD00A828E2 /* ChatsTableViewCell.swift */; };
-		5504E144246C2FC800A828E2 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E143246C2FC800A828E2 /* MessageTableViewCell.swift */; };
+		5504E144246C2FC800A828E2 /* PrivateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E143246C2FC800A828E2 /* PrivateTableViewCell.swift */; };
 		5504E147246C313900A828E2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E146246C313900A828E2 /* Colors.swift */; };
 		5504E149246C318B00A828E2 /* BubbleChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E148246C318B00A828E2 /* BubbleChatView.swift */; };
 		5504E14B246C4D6800A828E2 /* PrivateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5504E14A246C4D6800A828E2 /* PrivateViewController.swift */; };
@@ -65,7 +65,7 @@
 		5504E139246B075F00A828E2 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
 		5504E13C246B0D5500A828E2 /* Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
 		5504E13E246B0EBD00A828E2 /* ChatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsTableViewCell.swift; sourceTree = "<group>"; };
-		5504E143246C2FC800A828E2 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		5504E143246C2FC800A828E2 /* PrivateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateTableViewCell.swift; sourceTree = "<group>"; };
 		5504E146246C313900A828E2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		5504E148246C318B00A828E2 /* BubbleChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleChatView.swift; sourceTree = "<group>"; };
 		5504E14A246C4D6800A828E2 /* PrivateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateViewController.swift; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 				5504E1302469EC4700A828E2 /* LoginViewController.swift */,
 				5504E139246B075F00A828E2 /* ChatsViewController.swift */,
 				5504E13E246B0EBD00A828E2 /* ChatsTableViewCell.swift */,
-				5504E143246C2FC800A828E2 /* MessageTableViewCell.swift */,
+				5504E143246C2FC800A828E2 /* PrivateTableViewCell.swift */,
 				5504E14A246C4D6800A828E2 /* PrivateViewController.swift */,
 			);
 			path = View;
@@ -431,7 +431,7 @@
 				55F00853246D8395004A9B58 /* Binding.swift in Sources */,
 				5504E13D246B0D5500A828E2 /* Chats.swift in Sources */,
 				5504E149246C318B00A828E2 /* BubbleChatView.swift in Sources */,
-				5504E144246C2FC800A828E2 /* MessageTableViewCell.swift in Sources */,
+				5504E144246C2FC800A828E2 /* PrivateTableViewCell.swift in Sources */,
 				5504E13F246B0EBD00A828E2 /* ChatsTableViewCell.swift in Sources */,
 				55F0084E246CA80E004A9B58 /* SocketIOManager.swift in Sources */,
 			);

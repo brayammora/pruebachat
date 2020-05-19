@@ -1,5 +1,5 @@
 //
-//  MessageTableViewCell.swift
+//  PrivateTableViewCell.swift
 //  PruebaChat
 //
 //  Created by Brayam Alberto Mora Arias on 13/05/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MessageTableViewCell: UITableViewCell {
+class PrivateTableViewCell: UITableViewCell {
     
     
     @IBOutlet weak var messageView: UIView!

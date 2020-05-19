@@ -309,7 +309,7 @@
                                     <constraint firstAttribute="height" constant="625" id="p1Q-4k-i0V"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageTableViewCell" id="Xj9-X1-Pio" userLabel="Message Table View Cell" customClass="MessageTableViewCell" customModule="PruebaChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PrivateTableViewCell" id="Xj9-X1-Pio" userLabel="Private Table View Cell" customClass="PrivateTableViewCell" customModule="PruebaChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xj9-X1-Pio" id="MSU-sQ-Dih" userLabel="Message View">
@@ -322,45 +322,6 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Uku-FV-VHY">
-                                <rect key="frame" x="0.0" y="785" width="414" height="50"/>
-                                <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Hlb-Iq-NzZ" userLabel="Box Chat Text View">
-                                        <rect key="frame" x="0.0" y="0.0" width="356" height="50"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="356" id="rcM-fl-LAw"/>
-                                        </constraints>
-                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4q-Pz-gF4" userLabel="Open View">
-                                        <rect key="frame" x="362" y="0.0" width="52" height="50"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bYz-4u-PYa">
-                                                <rect key="frame" x="11" y="7" width="30" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="uparrow_icon"/>
-                                                <connections>
-                                                    <action selector="openChatAction:" destination="dSY-dC-b78" eventType="touchUpInside" id="gtW-wd-Soy"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="BWp-Rf-GAO"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="Hlb-Iq-NzZ" firstAttribute="top" secondItem="Uku-FV-VHY" secondAttribute="top" id="4Wx-2R-Arb"/>
-                                    <constraint firstItem="G4q-Pz-gF4" firstAttribute="top" secondItem="Uku-FV-VHY" secondAttribute="top" id="5OT-9Z-nNe"/>
-                                    <constraint firstAttribute="trailing" secondItem="G4q-Pz-gF4" secondAttribute="trailing" id="E6a-iB-93h"/>
-                                    <constraint firstItem="Hlb-Iq-NzZ" firstAttribute="leading" secondItem="Uku-FV-VHY" secondAttribute="leading" id="rNw-my-pP1"/>
-                                    <constraint firstAttribute="height" constant="50" id="wLW-z4-lq7"/>
-                                </constraints>
-                            </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Qk-4F-kcE" userLabel="Bottom View">
                                 <rect key="frame" x="0.0" y="836" width="414" height="60"/>
                                 <subviews>
@@ -442,21 +403,57 @@
                                     <constraint firstItem="cf4-w2-Jbe" firstAttribute="top" secondItem="0Qk-4F-kcE" secondAttribute="top" constant="10" id="vL3-wN-bAh"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Uku-FV-VHY">
+                                <rect key="frame" x="0.0" y="786" width="414" height="50"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Hlb-Iq-NzZ" userLabel="Box Chat Text View">
+                                        <rect key="frame" x="0.0" y="0.0" width="356" height="50"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="356" id="rcM-fl-LAw"/>
+                                        </constraints>
+                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4q-Pz-gF4" userLabel="Open View">
+                                        <rect key="frame" x="362" y="0.0" width="52" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bYz-4u-PYa">
+                                                <rect key="frame" x="11" y="7" width="30" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="uparrow_icon"/>
+                                                <connections>
+                                                    <action selector="openChatAction:" destination="dSY-dC-b78" eventType="touchUpInside" id="gtW-wd-Soy"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="BWp-Rf-GAO"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="414" id="Lic-tG-lbp"/>
+                                    <constraint firstAttribute="height" constant="50" id="aB0-OL-tY7"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="0Qk-4F-kcE" firstAttribute="leading" secondItem="XWE-oh-xCf" secondAttribute="leading" id="1P7-iY-zGP"/>
-                            <constraint firstItem="Uku-FV-VHY" firstAttribute="leading" secondItem="XWE-oh-xCf" secondAttribute="leading" id="8aS-3c-6Yy"/>
                             <constraint firstAttribute="bottom" secondItem="0Qk-4F-kcE" secondAttribute="bottom" id="He5-Xm-byE"/>
-                            <constraint firstItem="Uku-FV-VHY" firstAttribute="top" secondItem="Pbb-dt-sHU" secondAttribute="bottom" id="I3C-p0-ieW"/>
                             <constraint firstItem="Pbb-dt-sHU" firstAttribute="trailing" secondItem="XWE-oh-xCf" secondAttribute="trailing" id="PTX-PN-EGe"/>
                             <constraint firstItem="0Qk-4F-kcE" firstAttribute="trailing" secondItem="XWE-oh-xCf" secondAttribute="trailing" id="SdD-M8-Y9u"/>
                             <constraint firstItem="Pbb-dt-sHU" firstAttribute="leading" secondItem="XWE-oh-xCf" secondAttribute="leading" id="Wh4-lM-PnW"/>
                             <constraint firstItem="azh-D4-fcY" firstAttribute="top" secondItem="XWE-oh-xCf" secondAttribute="top" id="Xmd-ss-GHy"/>
                             <constraint firstItem="azh-D4-fcY" firstAttribute="centerX" secondItem="ejR-Od-foO" secondAttribute="centerX" id="cbj-NP-OzY"/>
+                            <constraint firstItem="Uku-FV-VHY" firstAttribute="trailing" secondItem="XWE-oh-xCf" secondAttribute="trailing" id="izJ-e3-4CN"/>
+                            <constraint firstItem="0Qk-4F-kcE" firstAttribute="top" secondItem="Uku-FV-VHY" secondAttribute="bottom" id="j5B-YI-7fp"/>
                             <constraint firstItem="azh-D4-fcY" firstAttribute="trailing" secondItem="XWE-oh-xCf" secondAttribute="trailing" id="o2M-t2-8KX"/>
-                            <constraint firstItem="Uku-FV-VHY" firstAttribute="trailing" secondItem="XWE-oh-xCf" secondAttribute="trailing" id="o2Q-wc-dd1"/>
                             <constraint firstItem="azh-D4-fcY" firstAttribute="leading" secondItem="XWE-oh-xCf" secondAttribute="leading" id="pV1-9W-knF"/>
+                            <constraint firstItem="Uku-FV-VHY" firstAttribute="leading" secondItem="XWE-oh-xCf" secondAttribute="leading" id="trP-KD-3qf"/>
                             <constraint firstItem="Pbb-dt-sHU" firstAttribute="top" secondItem="azh-D4-fcY" secondAttribute="bottom" constant="8" id="zle-gy-XHM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XWE-oh-xCf"/>
@@ -470,6 +467,7 @@
                         <outlet property="bottomView" destination="0Qk-4F-kcE" id="GLy-wJ-j4i"/>
                         <outlet property="boxChatTextView" destination="Hlb-Iq-NzZ" id="NGN-XT-PWi"/>
                         <outlet property="cameraButton" destination="Sre-26-cYz" id="BgF-lG-rSL"/>
+                        <outlet property="chatView" destination="Pbb-dt-sHU" id="40h-t3-Be3"/>
                         <outlet property="imageUser" destination="bH6-GI-5nC" id="zJl-HQ-olb"/>
                         <outlet property="infoButton" destination="9nA-jP-cOw" id="Zap-MH-ra3"/>
                         <outlet property="multimediaButton" destination="FWh-iC-bYE" id="JC1-C1-YXf"/>
