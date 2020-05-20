@@ -6,5 +6,5 @@ target 'PruebaChat' do
   use_frameworks!
 
   pod 'Socket.IO-Client-Swift', '~> 15.2.0'
-
+  pod 'CryptoSwift', '~> 1.0'
 end
