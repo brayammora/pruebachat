@@ -80,13 +80,11 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
         guard let message = self.boxChatTextView.text else {return}
         if(SocketIOManager.sharedInstance.checkConnection()) {
             let data = self.prepareData(message: message)
-            SocketIOManager.sharedInstance.sendMessage(data, completionHandler: { () -> Void in
-                self.messageList.append([self.receiverId: message])
-                self.chatView.reloadData()
-                self.chatView.isHidden = false
-            })
+            SocketIOManager.sharedInstance.sendMessage(data)
+            self.messageList.append(["me": message])
+            self.chatView.reloadData()
+            self.chatView.isHidden = false
         }
-        
     }
     
     func prepareData(message: String) -> String {
@@ -131,7 +129,7 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
                     print("")
             }
         }
-        self.messageList.append([to:message])
+        self.messageList.append(["receiver":message])
         self.chatView.reloadData()
         self.chatView.isHidden = false
         
@@ -167,12 +165,12 @@ extension PrivateViewController : UITableViewDelegate, UITableViewDataSource { /
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "PrivateTableViewCell") as? PrivateTableViewCell
         let row = self.messageList[indexPath.row]
-        let key = row.keys
+        let key = row.first!.key as String
         
-        if(key.description != self.me) {
-            test = (cell?.setCustom(text: row.values.description , type: true))!
+        if(key == "me") {
+            test = (cell?.setCustom(text: row["me"]! as String,type: false))!
         }else {
-            test = (cell?.setCustom(text: row.values.description,type: false))!
+            test = (cell?.setCustom(text: row["receiver"]! as String, type: true))!
         }
         
         return cell!

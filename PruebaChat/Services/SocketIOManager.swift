@@ -63,7 +63,7 @@ class SocketIOManager {
         self.listenForOtherMessages()
     }
     
-    func sendMessage(_ data: String, completionHandler: () -> Void) {
+    func sendMessage(_ data: String) {
         //transform data to JSON
         self.socket.emit("send_mensaje", data)
     }
