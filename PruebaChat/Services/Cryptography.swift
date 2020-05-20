@@ -80,7 +80,7 @@ class Cryptography {
       **/
      func cryptRandom() -> [UInt8] {
           do {
-             let codigo = "c0adf4f82ce818921a408a6af11f1d71575e895b9ffa90f6f8e71a72d0796d74"
+             let codigo = "8d04ae74ef7a29e154ad56324a26985190d3cbc0c94b562b7566647db9c9e019"
              let secret_rnd = Array<UInt8>(hex: codigo)
              return secret_rnd
           } catch let error as NSError {

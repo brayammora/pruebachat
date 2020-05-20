@@ -76,10 +76,32 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
     
     
     @IBAction func sendMessageAction(_ sender: Any) {
+        //Generamos un random que se usa para crear las llaves
+        let random = axlsign.randomBytes(64)
         
+        //Convertimos el random a Hexadecimal para ser enviado al otro usuario o usuarios
+        let randomTohex: String = random.toHexString()
+        print("randomTohex : \(randomTohex)\n")
+
+        //Convertimos el anterior hexadecimal a UInt8 para crear las llaves
+        let randomToUInt8 = strToArray(randomTohex)
+        
+        // Traemos la key(32) para cifrar e random
+        let secretKeyRandom = Cryptography().cryptRandom()
+        //Ciframos el random
+        let randomCipher = Cryptography().encrypted(randomTohex,secretKeyRandom)
+        
+        let keys = axlsign.generateKeyPair(randomToUInt8)
+
+        // Creamos la secret master con la que se cifra y descifra el mensaje
+        let secretSender = axlsign.sharedKey(secretKey: keys.privateKey, publicKey: keys.publicKey)
+        
+        /*------------------------------------ Ciframos el mensaje ------------------------------------*/
         guard let message = self.boxChatTextView.text else {return}
+        let cipherText = Cryptography().encrypted(message, secretSender)
+        
         if(SocketIOManager.sharedInstance.checkConnection()) {
-            let data = self.prepareData(message: message)
+            let data = self.prepareData(message: cipherText[0], randomCipher: randomCipher[0], iv: cipherText[1], irv: randomCipher[1])
             SocketIOManager.sharedInstance.sendMessage(data)
             self.messageList.append(["me": message])
             self.chatView.reloadData()
@@ -87,9 +109,9 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func prepareData(message: String) -> String {
+    func prepareData(message: String, randomCipher: String , iv: String , irv: String ) -> String {
         return """
-        { "from": "\(self.me)", "to": "\(self.receiverId)", "message" : "\(message)", "rnd" : "rnd" , "iv" : "iv" , "irv" : "irv" }
+        { "from": "\(self.me)", "to": "\(self.receiverId)", "message" : "\(message)", "rnd" : "\(randomCipher)" , "iv" : "\(iv)" , "irv" : "\(irv)" }
         """
     }
     
@@ -116,20 +138,53 @@ class PrivateViewController: UIViewController, UITextViewDelegate {
     
     @objc func handleNewMessageNotification(_ notification: Notification) {
         let userList = notification.object as! [[String: AnyObject]]
-        
+        print("userList : , \(userList)")
         var to = String()
         var message = String()
+        var iv = String()
+        var irv = String()
+        var rnd = String()
         for (key, value) in userList[0] {
             switch key {
-                case "to":
-                    to = value.description
+                case      "to":
+                    to      = value.description
                 case "message":
                     message = value.description
-                default:
+                case      "iv":
+                    iv      = value.description
+                case     "irv":
+                    irv     = value.description
+                case     "rnd":
+                    rnd     = value.description
+                       default:
                     print("")
             }
         }
-        self.messageList.append(["receiver":message])
+              
+        /*------------------------------------ Desciframos el mensaje ------------------------------------*/
+        // Pimero tomamos el random que nos envían y está en formato Hexadecimal y se encuentra cifrado
+        // Para descifrar obtenemos la key que están en tipo de dato Array<UInt8>
+
+        /*El otro usuario se traer la key para descifrar el mensaje */
+        let RandomSecretReceive = Cryptography().cryptRandom()
+        print("RandomSecretReceive: , \(RandomSecretReceive)\n")
+        // Desciframos el Random para generar las llaves y derivar el secreto maestro
+        let randomDescifrado2 = Cryptography().decrypted(rnd,  RandomSecretReceive  , irv)
+        
+        // Procedemos a generar las llaver públicas, privadas y secreto maestro
+        // Para ello el random descifrado que está en hexadecimal lo convertimos a [UInt8]
+        let rn = strToArray(randomDescifrado2)
+        // Generamos el par de llaves
+        let keypairReceive = axlsign.generateKeyPair(rn)
+        let publicReceive = keypairReceive.publicKey
+        let privateReceive = keypairReceive.privateKey
+        let secretReceive = axlsign.sharedKey(secretKey: privateReceive, publicKey: publicReceive)
+        
+        //Desciframos el texto cifrado
+        let decrypt = Cryptography().decrypted(message, secretReceive, iv)
+        
+        
+        self.messageList.append(["receiver":decrypt])
         self.chatView.reloadData()
         self.chatView.isHidden = false
         
