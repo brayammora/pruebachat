@@ -11,8 +11,7 @@ import SocketIO
 class SocketIOManager {
     
     static let sharedInstance = SocketIOManager()
-    let manager = SocketManager(socketURL: URL(string: "http://192.168.1.54:6898/")!, config: [.log(true), .compress])
-//    let manager = SocketManager(socketURL: URL(string: "https://socket-server-rcflechas.herokuapp.com/")!, config: [.log(true), .compress])
+    let manager = SocketManager(socketURL: URL(string: "https://socket-server-rcflechas.herokuapp.com/")!, config: [.log(true), .compress])
     var socket: SocketIOClient
     
     private init() {

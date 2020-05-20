@@ -28,6 +28,7 @@
 		55F00856246D83D6004A9B58 /* ChatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F00855246D83D6004A9B58 /* ChatsModel.swift */; };
 		55F00858246F1BB3004A9B58 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F00857246F1BB3004A9B58 /* Utilities.swift */; };
 		AB8D39772475617700C08A66 /* axlsign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8D39762475617700C08A66 /* axlsign.swift */; };
+		AB8D39792475881800C08A66 /* Cryptography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8D39782475881800C08A66 /* Cryptography.swift */; };
 		AD72428D95F2B12FC5307E4F /* Pods_PruebaChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE2C5D03C5EFD16D6D0BEF27 /* Pods_PruebaChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 		55F00855246D83D6004A9B58 /* ChatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsModel.swift; sourceTree = "<group>"; };
 		55F00857246F1BB3004A9B58 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		AB8D39762475617700C08A66 /* axlsign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = axlsign.swift; sourceTree = "<group>"; };
+		AB8D39782475881800C08A66 /* Cryptography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cryptography.swift; sourceTree = "<group>"; };
 		DE2C5D03C5EFD16D6D0BEF27 /* Pods_PruebaChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PruebaChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE42B13987816C73EC827A3 /* Pods-PruebaChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PruebaChat.release.xcconfig"; path = "Target Support Files/Pods-PruebaChat/Pods-PruebaChat.release.xcconfig"; sourceTree = "<group>"; };
 		FF0161B4F6E77D17BF727D44 /* Pods-PruebaChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PruebaChat.debug.xcconfig"; path = "Target Support Files/Pods-PruebaChat/Pods-PruebaChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -140,7 +142,6 @@
 				5504E12C2469E7A100A828E2 /* Viewmodel */,
 				5504E12B2469E79B00A828E2 /* View */,
 				5504E0FB2469BE0F00A828E2 /* AppDelegate.swift */,
-				AB8D39762475617700C08A66 /* axlsign.swift */,
 				5504E0FD2469BE0F00A828E2 /* SceneDelegate.swift */,
 				5504E1042469BE1600A828E2 /* Assets.xcassets */,
 				5504E1062469BE1600A828E2 /* LaunchScreen.storyboard */,
@@ -208,7 +209,9 @@
 		55F0084C246CA7FA004A9B58 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				AB8D39762475617700C08A66 /* axlsign.swift */,
 				55F0084D246CA80E004A9B58 /* SocketIOManager.swift */,
+				AB8D39782475881800C08A66 /* Cryptography.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 				55F00850246D832F004A9B58 /* ChatsViewModel.swift in Sources */,
 				55F00853246D8395004A9B58 /* Binding.swift in Sources */,
 				5504E13D246B0D5500A828E2 /* Chats.swift in Sources */,
+				AB8D39792475881800C08A66 /* Cryptography.swift in Sources */,
 				5504E149246C318B00A828E2 /* BubbleChatView.swift in Sources */,
 				5504E144246C2FC800A828E2 /* PrivateTableViewCell.swift in Sources */,
 				5504E13F246B0EBD00A828E2 /* ChatsTableViewCell.swift in Sources */,
